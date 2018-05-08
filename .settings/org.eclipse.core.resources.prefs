@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+encoding//WebRoot/WEB-INF/ftl/common/dataDic.ftl=UTF-8
+encoding//WebRoot/WEB-INF/ftl/common/util.ftl=UTF-8
+encoding//src/com/controller/EmpController.java=GBK
+encoding//src/com/controller/JSONUtil.java=UTF-8
+encoding//src/com/controller/TestController.java=GBK
+encoding//src/com/dao/EmpMapper.java=GBK
+encoding//src/com/dao/EmpMapper.xml=GBK
+encoding//src/com/service/EmpService.java=GBK
+encoding//src/com/service/impl/EmpServiceImpl.java=GBK
+encoding//src/com/util/EmpsCondition.java=GBK
+encoding//src/com/util/Page.java=GBK
+encoding//src/\u5B9E\u73B0\u7C7B\u7701\u7565com/dao/impl/EmpMapperImpl.java=GBK
+encoding/<project>=GBK

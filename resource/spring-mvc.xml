@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/mvc
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	">
+	 <context:property-placeholder location="classpath:*.properties" />   
+
+
+ <!--技持将reponsebody返回的java对象利用jasckson包转化为json字符串-->
+  <mvc:annotation-driven/> 
+
+<!-- 自动扫描controller包下的所有类，使其认为spring mvc的控制器-->
+<context:component-scan base-package="com.controller">
+</context:component-scan>
+ 
+ <!-- 设置freeMarker的配置文件路径 -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/ftl/"/>
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="xml_escape" value-ref="fmXmlEscape"/>
+            </map>
+        </property>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="defaultEncoding">utf-8</prop>
+                <prop key="output_encoding">utf-8</prop>
+                <prop key="number_format">0.################</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <prop key="time_format">HH:mm:Ss</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:Ss</prop>
+                <prop key="auto_import">common/util.ftl as spring</prop>
+                <prop key="classic_compatible">true</prop>
+                <prop key="tag_syntax">auto_detect</prop>
+                <prop key="template_update_delay">2</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="boolean_format">true,false</prop>
+                <prop key="whitespace_stripping">true</prop>
+                <prop key="locale">zh_CN</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
+
+    <!--配置freeMarker视图解析器-->
+    <bean id="freemakerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <property name="suffix" value=".html"/>
+        <property name="contentType" value="text/html; charset=UTF-8"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <property name="exposeSessionAttributes" value="true"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="requestContextAttribute" value="request"/>
+        <property name="allowSessionOverride" value="true"/>
+        <property name="order" value="1"/>
+    </bean>
+ 
+ 
+ <!-- jsp配置视图渲染器 -->
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+ <property name="prefix" value="/"></property>
+  <property name="suffix" value=".jsp"></property>
+  <property name="order" value="2" />
+</bean>
+ <!-- 实现文件上传的配置 -->
+<!--   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">   
+    <property name="defaultEncoding" value="UTF-8"/>    
+    <property name="maxUploadSize" value="5242880"/> 5M   
+  </bean> -->
+ 
+ 
+ <!--多部分文件上传 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置上传文件的最大尺寸为10MB -->
+        <property name="maxUploadSize" value="1048576000"/>
+        <property name="maxInMemorySize" value="1024"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+</beans>

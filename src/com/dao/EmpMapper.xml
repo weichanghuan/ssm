@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.EmpMapper">
+	<select id="getAllEmp" resultType="Emp">
+		select * from emp
+	</select>
+	<delete id="delEmpBy" parameterType="int">
+		delete from emp where empno=#{empno}
+	</delete>
+	<select id="getEmpByfqname" resultType="Emp" parameterType="java.lang.String">
+	select * from emp where ename like '%'||#{ename}||'%'
+	</select>
+	
+	<update id="updateEmp" parameterType="Emp">
+	update emp set ename=#{ename},job=#{job},mgr=#{mgr},hiredate=#{hiredate},sal=#{sal},comm=#{comm},deptno=#{deptno} where empno=#{empno}
+	</update>
+	
+	 <!-- 添加 -->
+       <insert id="addEmp" parameterType="emp">
+      insert into EMP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="empno != null" >
+        EMPNO,
+      </if>
+      <if test="ename != null" >
+        ENAME,
+      </if>
+      <if test="job != null" >
+        JOB,
+      </if>
+      <if test="mgr != null" >
+        MGR,
+      </if>
+      <if test="hiredate != null" >
+        HIREDATE,
+      </if>
+      <if test="sal != null" >
+        SAL,
+      </if>
+      <if test="comm != null" >
+        COMM,
+      </if>
+      <if test="deptno != null" >
+        DEPTNO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="empno != null" >
+        #{empno,jdbcType=DECIMAL},
+      </if>
+      <if test="ename != null" >
+        #{ename,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="mgr != null" >
+        #{mgr,jdbcType=DECIMAL},
+      </if>
+      <if test="hiredate != null" >
+        #{hiredate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sal != null" >
+        #{sal,jdbcType=DECIMAL},
+      </if>
+      <if test="comm != null" >
+        #{comm,jdbcType=DECIMAL},
+      </if>
+      <if test="deptno != null" >
+        #{deptno,jdbcType=DECIMAL},
+      </if>
+    </trim>
+    </insert>
+    
+       <!-- 根据id查询emp -->
+    <select id="getEmpByid" parameterType="int" resultType="emp">
+     select * from emp where empno=#{empno}
+    </select>
+    
+   <!--条件分页查询  -->
+  <select id="getEmpsByEmpsCondition" parameterType="EmpsCondition" resultType="emp">
+  		 <![CDATA[
+	   SELECT * FROM (SELECT ROWNUM AS rowno, t.*
+	          FROM (select * from emp where ename like '%'||#{str}||'%') t      
+	         WHERE ROWNUM <= (#{pageno}*#{pagesize})) table_alias
+	 WHERE table_alias.rowno >= ((#{pageno}-1)*#{pagesize}+1)
+	 ]]>
+  </select>
+  
+  <select id="getEmpsrecourd" parameterType="EmpsCondition" resultType="int">
+  	select count(1) from emp where ename like '%'||#{str}||'%'
+  </select>
+  
+  
+  
+  
+</mapper>

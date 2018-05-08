@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context.xsd
+	 http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+		 <!-- Properties文件读取配置，base的properties -->  
+       <context:property-placeholder location="classpath:*.properties" />   
+       
+       
+       <!-- JNDI获取数据源(使用dbcp连接池)  -->
+       
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" scope="singleton">
+	    <property name="driverClassName" value="${driver}"/>
+	    <property name="url" value="${url}"/>
+	    <property name="username" value="${username}"/>
+	    <property name="password" value="${password}"/>
+	 	</bean>  
+	 	
+		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	 		<property name="dataSource" ref="dataSource"/>
+	 		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+	 	</bean>
+	 	
+	  <!-- 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+	 		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+	 	</bean>  -->
+		
+		<context:component-scan base-package="com.service.impl">
+		</context:component-scan>
+		
+		
+	 <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<property name="basePackage" value="com.dao"/>
+	</bean> 
+	
+	<!-- 配置Spring的事务管理器 -->   
+	  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+	      <property name="dataSource" ref="dataSource"/> 
+	   </bean>    
+
+ 	<!-- 注解方式配置事物 --> 
+ 	<tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+ 	
+
+		<!--  <bean id="empMapper"  class="com.mapper.impl.EmpMapperImpl">
+			<property name="sqlSessionTemplate" ref="sqlSessionTemplate"></property>
+		</bean>
+		<bean id="empService"  class="com.service.impl.EmpServiceImpl">
+			<property name="empMapper" ref="empMapper" />
+		</bean> -->
+		
+		<!-- aop Aspect-->
+	<aop:config>  
+        <aop:aspect id="TestAspect" ref="aspectBean">  
+            <!--配置com.spring.service包下所有类或接口的所有方法-->  
+            <aop:pointcut id="businessService" expression="execution(* com.spring.service.*.*(..))" />  
+            <aop:before pointcut-ref="businessService" method="doBefore"/>  
+            <aop:after pointcut-ref="businessService" method="doAfter"/>  
+            <aop:around pointcut-ref="businessService" method="doAround"/>  
+            <aop:after-throwing pointcut-ref="businessService" method="doThrowing" throwing="ex"/>  
+        </aop:aspect>  
+    </aop:config>  
+      
+    <bean id="aspectBean" class="com.spring.aop.TestAspect" />  
+		
+		
+		
+		
+
+</beans>

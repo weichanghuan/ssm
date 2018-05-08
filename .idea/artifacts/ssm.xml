@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="ssm">
+    <output-path>E:/</output-path>
+    <root id="archive" name="ssm.war" />
+  </artifact>
+</component>
